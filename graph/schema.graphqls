@@ -1,0 +1,35 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+type Movie {
+  id: Int!
+  title: String!
+  year: String!
+  stars: [Star!]!
+}
+
+type Star {
+  id: Int!
+  name: String!
+}
+
+type Query {
+  movies: [Movie!]!
+} 
+
+input InputMovie {
+  title: String!
+  year: String!
+  stars: [InputStar!]!
+}
+
+input InputStar {
+  name: String!
+}
+
+type Mutation {
+  createMovie(input: InputMovie!): Movie!
+  updateMovie(movieId: Int!, input: InputMovie): Movie!
+  deleteMovie(movieId: Int!): Boolean!
+}
