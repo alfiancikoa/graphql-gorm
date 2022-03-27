@@ -1,3 +1,3 @@
 # GraphQL with GORM
 
-GraphQL dengan GORM 
+GraphQL dengan GORM merupakan
