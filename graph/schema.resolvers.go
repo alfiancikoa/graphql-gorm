@@ -44,24 +44,32 @@ func (r *mutationResolver) DeleteMovie(ctx context.Context, movieID int) (bool, 
 	panic(fmt.Errorf("not implemented"))
 }
 
+// Fungsi untuk menampilkan seluruh list movie dan stars berdasarkan movie
 func (r *queryResolver) Movies(ctx context.Context) ([]*model.Movie, error) {
+	// variabel untuk menampung data movie
 	movies := []*model.Movie{}
+	// query untuk mengambil semua data movie pada tabel movie di database
 	tx := r.DB.Table("movies").Select(
 		"movies.id, movies.title, movies.year").Find(&movies)
 
+	// jika ada error, maka kembalikan status error
 	if tx.Error != nil {
 		fmt.Println(tx.Error)
 		return nil, fmt.Errorf("internal server error")
 	}
+	// proses pengambilan data stars berdasarkan movie masing-masing pada database
 	for _, movie := range movies {
-		movieId := movie.ID
+		// variabel untuk menampung list stars
 		stars := []*model.Star{}
-		if err := r.DB.Where("movie_id = ?", movieId).Find(&stars).Error; err != nil {
+		// query untuk mencari data stars berdasarkan movie-nya
+		if err := r.DB.Where("movie_id = ?", movie.ID).Find(&stars).Error; err != nil {
 			fmt.Println(tx.Error)
 			return nil, fmt.Errorf("internal server error")
 		}
+		// kembalikan data stars sesuai dengan movie-nya
 		movie.Stars = stars
 	}
+	// kembalikan data seluruh list movie beserta data stars-nya
 	return movies, nil
 }
 
