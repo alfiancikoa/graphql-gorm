@@ -20,6 +20,7 @@ type Movie struct {
 }
 
 type Star struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
+	ID      int    `json:"id"`
+	MovieID int    `json:"movieId"`
+	Name    string `json:"name"`
 }

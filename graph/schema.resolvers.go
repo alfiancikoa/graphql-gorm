@@ -12,7 +12,22 @@ import (
 )
 
 func (r *mutationResolver) CreateMovie(ctx context.Context, input model.InputMovie) (*model.Movie, error) {
-	panic(fmt.Errorf("not implemented"))
+	movie := model.Movie{
+		Title: input.Title,
+		Year:  input.Year,
+	}
+	if err := r.DB.Create(&movie).Error; err != nil {
+		fmt.Println(err)
+		return nil, fmt.Errorf("internal server error")
+	}
+	for _, star := range input.Stars {
+		stars := model.Star{MovieID: movie.ID, Name: star.Name}
+		if err := r.DB.Create(&stars).Error; err != nil {
+			fmt.Println(err)
+			return nil, fmt.Errorf("internal server error")
+		}
+	}
+	return &movie, nil
 }
 
 func (r *mutationResolver) UpdateMovie(ctx context.Context, movieID int, input *model.InputMovie) (*model.Movie, error) {
@@ -24,7 +39,24 @@ func (r *mutationResolver) DeleteMovie(ctx context.Context, movieID int) (bool, 
 }
 
 func (r *queryResolver) Movies(ctx context.Context) ([]*model.Movie, error) {
-	panic(fmt.Errorf("not implemented"))
+	movies := []*model.Movie{}
+	tx := r.DB.Table("movies").Select(
+		"movies.id, movies.title, movies.year").Find(&movies)
+
+	if tx.Error != nil {
+		fmt.Println(tx.Error)
+		return nil, fmt.Errorf("internal server error")
+	}
+	for _, movie := range movies {
+		movieId := movie.ID
+		stars := []*model.Star{}
+		if err := r.DB.Where("movie_id = ?", movieId).Find(&stars).Error; err != nil {
+			fmt.Println(tx.Error)
+			return nil, fmt.Errorf("internal server error")
+		}
+		movie.Stars = stars
+	}
+	return movies, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.
@@ -42,3 +74,13 @@ type queryResolver struct{ *Resolver }
 //  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
 //    it when you're done.
 //  - You have helper methods in this file. Move them out to keep these resolver files clean.
+func mapStarInput(starsInput []*model.InputStar, movieId int) []model.Star {
+	var stars []model.Star
+	for _, star := range starsInput {
+		stars = append(stars, model.Star{
+			MovieID: movieId,
+			Name:    star.Name,
+		})
+	}
+	return stars
+}

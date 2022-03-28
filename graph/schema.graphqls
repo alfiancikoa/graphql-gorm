@@ -11,11 +11,13 @@ type Movie {
 
 type Star {
   id: Int!
+  movieId: Int!
   name: String!
 }
 
 type Query {
   movies: [Movie!]!
+  movie(id: Int!): movie!
 } 
 
 input InputMovie {

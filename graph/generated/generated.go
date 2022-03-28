@@ -61,8 +61,9 @@ type ComplexityRoot struct {
 	}
 
 	Star struct {
-		ID   func(childComplexity int) int
-		Name func(childComplexity int) int
+		ID      func(childComplexity int) int
+		MovieID func(childComplexity int) int
+		Name    func(childComplexity int) int
 	}
 }
 
@@ -168,6 +169,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Star.ID(childComplexity), true
 
+	case "Star.movieId":
+		if e.complexity.Star.MovieID == nil {
+			break
+		}
+
+		return e.complexity.Star.MovieID(childComplexity), true
+
 	case "Star.name":
 		if e.complexity.Star.Name == nil {
 			break
@@ -252,6 +260,7 @@ type Movie {
 
 type Star {
   id: Int!
+  movieId: Int!
   name: String!
 }
 
@@ -780,6 +789,41 @@ func (ec *executionContext) _Star_id(ctx context.Context, field graphql.Collecte
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Star_movieId(ctx context.Context, field graphql.CollectedField, obj *model.Star) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Star",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.MovieID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2288,6 +2332,16 @@ func (ec *executionContext) _Star(ctx context.Context, sel ast.SelectionSet, obj
 		case "id":
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Star_id(ctx, field, obj)
+			}
+
+			out.Values[i] = innerFunc(ctx)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "movieId":
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Star_movieId(ctx, field, obj)
 			}
 
 			out.Values[i] = innerFunc(ctx)
