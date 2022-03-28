@@ -37,7 +37,27 @@ func (r *mutationResolver) CreateMovie(ctx context.Context, input model.InputMov
 }
 
 func (r *mutationResolver) UpdateMovie(ctx context.Context, movieID int, input *model.InputMovie) (*model.Movie, error) {
-	panic(fmt.Errorf("not implemented"))
+	newMovie := model.Movie{
+		Title: input.Title,
+		Year:  input.Year,
+	}
+	if err := r.DB.Model(&model.Movie{}).Where("id=?", movieID).Updates(&newMovie).Error; err != nil {
+		fmt.Println(err)
+		return nil, fmt.Errorf("internal server error")
+	}
+	var newStars []*model.Star
+	for _, star := range input.Stars {
+		newStars = append(newStars, &model.Star{Name: star.Name})
+		stars := model.Star{MovieID: movieID, Name: star.Name}
+		// query untuk memasukkan list stars pada movie tersebut ke dalam tabel star pada database
+		if err := r.DB.Model(&model.Star{}).Where("movie_id=?", movieID).Updates(stars).Error; err != nil {
+			fmt.Println(err)
+			return nil, fmt.Errorf("internal server error")
+		}
+	}
+	newMovie.ID = movieID
+	newMovie.Stars = newStars
+	return &newMovie, nil
 }
 
 func (r *mutationResolver) DeleteMovie(ctx context.Context, movieID int) (bool, error) {
