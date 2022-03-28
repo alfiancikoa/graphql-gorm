@@ -11,22 +11,28 @@ import (
 	"github.com/alfiancikoa/graphql-gorm/graph/model"
 )
 
+// Fungsi untuk menambahkan movie baru
 func (r *mutationResolver) CreateMovie(ctx context.Context, input model.InputMovie) (*model.Movie, error) {
+	// ambil data kemudian tampung ke variable movie
 	movie := model.Movie{
 		Title: input.Title,
 		Year:  input.Year,
 	}
+	// query untuk menambahkan movie baru ke dalam tabel movie pada database
 	if err := r.DB.Create(&movie).Error; err != nil {
 		fmt.Println(err)
 		return nil, fmt.Errorf("internal server error")
 	}
+	// mengisi data list stars
 	for _, star := range input.Stars {
 		stars := model.Star{MovieID: movie.ID, Name: star.Name}
+		// query untuk memasukkan list stars pada movie tersebut ke dalam tabel star pada database
 		if err := r.DB.Create(&stars).Error; err != nil {
 			fmt.Println(err)
 			return nil, fmt.Errorf("internal server error")
 		}
 	}
+	// kembalikan data movie yang telah dimasukkan pada database
 	return &movie, nil
 }
 
