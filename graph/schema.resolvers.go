@@ -65,18 +65,26 @@ func (r *queryResolver) Movies(ctx context.Context) ([]*model.Movie, error) {
 	return movies, nil
 }
 
+// Fungsi untuk menampilkan atau Get data movie berdasarkan id movie-nya
 func (r *queryResolver) Movie(ctx context.Context, id int) (*model.Movie, error) {
+	// variabel untuk menampung data movie
 	movie := model.Movie{}
+	// query database pada tabel movie untuk mencari movie by id kemudian data disimpan ke variable movie
 	if err := r.DB.Find(&movie, id).Error; err != nil {
 		fmt.Println(err)
 		return nil, fmt.Errorf("internal server error")
 	}
+	// variabel untuk menampung data stars
 	var stars []*model.Star
+	// query database pada tabel stars untuk mencari list stars sesuai dengan id movie yang dicari
+	// kemudian data disimpan ke variable stars
 	if err := r.DB.Where("movie_id=?", id).Find(&stars).Error; err != nil {
 		fmt.Println(err)
 		return nil, fmt.Errorf("internal server error")
 	}
+	// assign data movie stars dengan data list stars
 	movie.Stars = stars
+	// kembalikan data movie by id
 	return &movie, nil
 }
 
