@@ -41,7 +41,15 @@ func (r *mutationResolver) UpdateMovie(ctx context.Context, movieID int, input *
 }
 
 func (r *mutationResolver) DeleteMovie(ctx context.Context, movieID int) (bool, error) {
-	panic(fmt.Errorf("not implemented"))
+	if err := r.DB.Delete(&model.Movie{}, movieID).Error; err != nil {
+		fmt.Println(err)
+		return false, fmt.Errorf("internal server error")
+	}
+	if err := r.DB.Where("movie_id=?", movieID).Delete(&model.Star{}).Error; err != nil {
+		fmt.Println(err)
+		return false, fmt.Errorf("internal server error")
+	}
+	return true, nil
 }
 
 // Fungsi untuk menampilkan seluruh list movie dan stars berdasarkan movie
