@@ -16,7 +16,7 @@ type Movie struct {
 	ID    int     `json:"id"`
 	Title string  `json:"title"`
 	Year  string  `json:"year"`
-	Stars []*Star `json:"stars"`
+	Stars []*Star `gorm:"foreignKey:MovieID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"stars"`
 }
 
 type Star struct {

@@ -17,7 +17,7 @@ type Star {
 
 type Query {
   movies: [Movie!]!
-  movie(id: Int!): movie!
+  movie(id: Int!): Movie!
 } 
 
 input InputMovie {

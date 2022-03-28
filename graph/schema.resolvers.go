@@ -59,6 +59,21 @@ func (r *queryResolver) Movies(ctx context.Context) ([]*model.Movie, error) {
 	return movies, nil
 }
 
+func (r *queryResolver) Movie(ctx context.Context, id int) (*model.Movie, error) {
+	movie := model.Movie{}
+	if err := r.DB.Find(&movie, id).Error; err != nil {
+		fmt.Println(err)
+		return nil, fmt.Errorf("internal server error")
+	}
+	var stars []*model.Star
+	if err := r.DB.Where("movie_id=?", id).Find(&stars).Error; err != nil {
+		fmt.Println(err)
+		return nil, fmt.Errorf("internal server error")
+	}
+	movie.Stars = stars
+	return &movie, nil
+}
+
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
