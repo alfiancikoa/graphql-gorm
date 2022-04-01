@@ -30,3 +30,5 @@ $ go run github.com/99designs/gqlgen init
 ```
 
 more info <a href="https://github.com/99designs/gqlgen"><b>Here</b></a>
+<br>
+Thanks
