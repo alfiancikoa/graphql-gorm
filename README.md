@@ -28,3 +28,5 @@ $ go get github.com/go-sql-driver/mysql
 $ go get github.com/99designs/gqlgen
 $ go run github.com/99designs/gqlgen init
 ```
+
+more info <a href="https://github.com/99designs/gqlgen"><b>Here</b></a>
