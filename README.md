@@ -1,7 +1,7 @@
 # GraphQL with GORM
 
 <p align="justify">Gorm merupakan ORM yang dikembangkan untuk bahasa GO, seperti halnya SQLAlchemy pada bahasa python. Golang juga mendukung proses auto migrations, ini adalah alat bantu yang cukup keren yang berfungsi sebagai alat bantu untuk mempercepat kerja developer.
-<br>
+<br><br>
 (Sumber: https://halovina.com/relasi-table-pada-golang-dengan-gorm)
 </p>
 
