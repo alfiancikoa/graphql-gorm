@@ -4,3 +4,13 @@
 <br>
 (Sumber: https://halovina.com/relasi-table-pada-golang-dengan-gorm)
 </p>
+
+### Command To Use
+
+- Buat file direktory workspace
+
+```
+$ mkdir graphql-gorm
+$ cd graphql-gorm
+$ go mod init github.com/[username]/graphql-gorm
+```
