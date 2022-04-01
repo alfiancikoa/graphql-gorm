@@ -14,3 +14,10 @@ $ mkdir graphql-gorm
 $ cd graphql-gorm
 $ go mod init github.com/[username]/graphql-gorm
 ```
+
+- download dependensi library GORM dan mysql driver yang akan digunakan
+
+```
+$ go get github.com/jinzhu/gorm
+$ go get github.com/go-sql-driver/mysql
+```
