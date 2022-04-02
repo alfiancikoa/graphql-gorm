@@ -26,6 +26,11 @@ $ go get github.com/go-sql-driver/mysql
 
 ```
 $ go get github.com/99designs/gqlgen
+```
+
+- Terapkan skeleton/struktur folder dari 99designs
+
+```
 $ go run github.com/99designs/gqlgen init
 ```
 
