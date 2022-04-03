@@ -33,8 +33,8 @@ $ go get github.com/99designs/gqlgen
 ```
 $ go run github.com/99designs/gqlgen init
 ```
-
-more info <a href="https://github.com/99designs/gqlgen"><b>Here</b></a>
+more info about connecting mongoDB<a href="https://medium.com/programmer-geek/menggunakan-mongodb-pada-golang-ad9eb9ed08c">Here</a><br>
+more info about GraphQL <a href="https://github.com/99designs/gqlgen"><b>Here</b></a>
 <br>
 Thanks
 Alfian
